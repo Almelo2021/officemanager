@@ -10,6 +10,7 @@ from genebait import generate_dataframes_based_on_template
 
 app = Flask(__name__)
 
+
 # All your existing dictionaries and configurations
 additionalHoursLocal = {}
 
