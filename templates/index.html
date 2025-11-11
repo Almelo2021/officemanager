@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Manager - Room Configuration Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='officemanager.png') }}" alt="Office Manager" class="logo">
+            <h1>Office Manager Room Analyzer</h1>
+            <p class="subtitle">Optimize your room configurations with data-driven insights</p>
+        </header>
+
+        <div class="upload-section card">
+            <div class="upload-options">
+                <div class="option-group">
+                    <label class="radio-card">
+                        <input type="radio" name="mode" value="live" checked>
+                        <div class="radio-content">
+                            <span class="icon">📡</span>
+                            <span class="label">Use Live Data</span>
+                        </div>
+                    </label>
+
+                    <label class="radio-card">
+                        <input type="radio" name="mode" value="files">
+                        <div class="radio-content">
+                            <span class="icon">📁</span>
+                            <span class="label">Upload CSV Files</span>
+                        </div>
+                    </label>
+                    
+                </div>
+
+                <div id="file-upload-area" class="file-upload-area">
+                    <input type="file" id="fileInput" multiple accept=".csv" style="display: none;">
+                    <div class="upload-prompt" id="uploadPrompt">
+                        <span class="upload-icon">☁️</span>
+                        <p>Click or drag CSV files here</p>
+                        <small>Multiple files supported</small>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <div class="options-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="includeWeekends">
+                        <span>Include Weekends</span>
+                    </label>
+                    
+                    <button id="analyzeBtn" class="btn-primary">
+                        <span>Analyze Data</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing data...</p>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <div class="results-header">
+                <h2>Analysis Results</h2>
+                <div class="days-badge" id="daysBadge"></div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="overview">Overview</button>
+                <button class="tab-btn" data-tab="configuration">Configuration</button>
+                <button class="tab-btn" data-tab="locations">Locations</button>
+                <button class="tab-btn" data-tab="parts">Parts & Pricing</button>
+                <button class="tab-btn" data-tab="usage">Usage Stats</button>
+            </div>
+
+            <div class="tab-content active" id="overview">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Total Price Impact</h3>
+                        <p class="metric-value" id="priceImpact"></p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Rooms to Add</h3>
+                        <p class="metric-value" id="roomsToAdd"></p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Rooms to Remove</h3>
+                        <p class="metric-value" id="roomsToRemove"></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Delta Summary</h3>
+                    <div id="deltaSummary" class="data-table"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="configuration">
+                <div class="comparison-grid">
+                    <div class="card">
+                        <h3>Current Configuration</h3>
+                        <div id="currentConfig" class="data-table"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Recommended Configuration</h3>
+                        <div id="recommendedConfig" class="data-table"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Changes Breakdown</h3>
+                    <div class="changes-grid">
+                        <div class="change-section">
+                            <h4 class="positive">Additions</h4>
+                            <div id="additions" class="data-table"></div>
+                        </div>
+                        <div class="change-section">
+                            <h4 class="negative">Reductions</h4>
+                            <div id="reductions" class="data-table"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="locations">
+                <div class="comparison-grid">
+                    <div class="card">
+                        <h3>Locations Before</h3>
+                        <div id="locationsBefore" class="data-table"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Locations After</h3>
+                        <div id="locationsAfter" class="data-table"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Detailed Room Changes</h3>
+                    <div class="comparison-grid">
+                        <div>
+                            <h4>Rooms to Add by Location</h4>
+                            <div id="roomsToAddDetails" class="data-table"></div>
+                        </div>
+                        <div>
+                            <h4>Rooms to Remove by Location</h4>
+                            <div id="roomsToRemoveDetails" class="data-table"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="parts">
+                <div class="comparison-grid">
+                    <div class="card">
+                        <h3>Total Present Parts</h3>
+                        <div id="totalPresent" class="data-table"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Total Needed Parts</h3>
+                        <div id="totalNeeded" class="data-table"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Parts Changes</h3>
+                    <div id="partsChanges" class="data-table"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="usage">
+                <div class="card">
+                    <h3>Room Usage Statistics</h3>
+                    <div id="usageStats" class="usage-room-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
