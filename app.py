@@ -10,7 +10,6 @@ from genebait import generate_dataframes_based_on_template
 
 app = Flask(__name__)
 
-
 # All your existing dictionaries and configurations
 additionalHoursLocal = {}
 
@@ -179,6 +178,7 @@ dealerprices = {
     'Dakbalk 2400': '€45',
     'Dakbalk 3600': '€45'
 }
+
 
 def price_to_float(price_str):
     return float(price_str.replace('€', '').replace(',', '.'))
