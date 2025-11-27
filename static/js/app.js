@@ -181,7 +181,18 @@ function createTable(data, showColors = false) {
         return '<p class="neutral">No data available</p>';
     }
     
-    const rows = Object.entries(data).map(([key, value]) => {
+    const bowOrder = ['BowOne', 'BowTwo', 'BowFour', 'BowSix', 'BowNine', 'BowTwelve'];
+    
+    const sortedEntries = Object.entries(data).sort(([keyA], [keyB]) => {
+        const indexA = bowOrder.indexOf(keyA);
+        const indexB = bowOrder.indexOf(keyB);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return keyA.localeCompare(keyB);
+    });
+    
+    const rows = sortedEntries.map(([key, value]) => {
         let valueClass = '';
         if (showColors) {
             if (value > 0) valueClass = 'positive';
@@ -189,9 +200,11 @@ function createTable(data, showColors = false) {
             else valueClass = 'neutral';
         }
         
+        const displayKey = key.replace(/^Bow/, 'BOW ');
+        
         return `
             <tr>
-                <td>${key}</td>
+                <td>${displayKey}</td>
                 <td class="${valueClass}">${value > 0 && showColors ? '+' : ''}${value}</td>
             </tr>
         `;
@@ -217,11 +230,26 @@ function createNestedTable(data) {
         return '<p class="neutral">No data available</p>';
     }
     
+    const bowOrder = ['BowOne', 'BowTwo', 'BowFour', 'BowSix', 'BowNine', 'BowTwelve'];
+    
     const sections = Object.entries(data).map(([location, items]) => {
         let itemsHtml;
         
         if (Array.isArray(items)) {
-            itemsHtml = items.map(item => `<li>${item}</li>`).join('');
+            const sortedItems = [...items].sort((a, b) => {
+                const indexA = bowOrder.indexOf(a);
+                const indexB = bowOrder.indexOf(b);
+                if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                if (indexA !== -1) return -1;
+                if (indexB !== -1) return 1;
+                return a.localeCompare(b);
+            });
+            
+            itemsHtml = sortedItems.map(item => {
+                const displayItem = item.replace(/^Bow/, 'BOW ');
+                return `<li>${displayItem}</li>`;
+            }).join('');
+            
             return `
                 <div style="margin-bottom: 16px;">
                     <strong>${location}</strong>
@@ -231,14 +259,26 @@ function createNestedTable(data) {
                 </div>
             `;
         } else {
-            const rows = Object.entries(items)
+            const sortedEntries = Object.entries(items)
                 .filter(([_, value]) => value > 0)
-                .map(([key, value]) => `
+                .sort(([keyA], [keyB]) => {
+                    const indexA = bowOrder.indexOf(keyA);
+                    const indexB = bowOrder.indexOf(keyB);
+                    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                    if (indexA !== -1) return -1;
+                    if (indexB !== -1) return 1;
+                    return keyA.localeCompare(keyB);
+                });
+            
+            const rows = sortedEntries.map(([key, value]) => {
+                const displayKey = key.replace(/^Bow/, 'BOW ');
+                return `
                     <tr>
-                        <td>${key}</td>
+                        <td>${displayKey}</td>
                         <td>${value}</td>
                     </tr>
-                `).join('');
+                `;
+            }).join('');
             
             if (rows === '') return '';
             
