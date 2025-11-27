@@ -361,7 +361,14 @@ function displayUsageStats(stats) {
                     categoryPercentage: 0.55
                 }]
             },
-            options: { responsive: true, animation: { duration: 900 } }
+            options: { 
+                responsive: true, 
+                animation: { duration: 900 },
+                scales: {
+                    x: { title: { display: true, text: 'Hour of Day' } },
+                    y: { title: { display: true, text: 'Average Number of People' }, beginAtZero: true }
+                }
+            }
         });
 
         // ---- Weekday Chart ----
@@ -381,7 +388,14 @@ function displayUsageStats(stats) {
                     categoryPercentage: 0.55
                 }]
             },
-            options: { responsive: true, animation: { duration: 900 } }
+            options: { 
+                responsive: true, 
+                animation: { duration: 900 },
+                scales: {
+                    x: { title: { display: true, text: 'Day of Week' } },
+                    y: { title: { display: true, text: 'Average Number of People' }, beginAtZero: true }
+                }
+            }
         });
 
         // ✅ NEW — Cumulative Occupancy Distribution
@@ -416,10 +430,11 @@ function displayUsageStats(stats) {
                 responsive: true,
                 animation: { duration: 1000 },
                 plugins: { title: { display: true, text: 'Cumulative Occupancy Distribution' } },
-                scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+                scales: { 
+                    x: { title: { display: true, text: 'Occupancy Level' } },
+                    y: { title: { display: true, text: 'Percentage of Time' }, beginAtZero: true, ticks: { callback: v => v + '%' } }
+                }
             }
         });
     });
 }
-
-
