@@ -676,13 +676,13 @@ def analyze():
     
     if mode == 'live':
         live_files = [
-            "Netherlands#Almelo#Ho Chi Minh-stad#BowSix-2 (1).csv",
+            "Netherlands#Almelo#Dreesz#BowSix-2 (1).csv",
             "Netherlands#Almelo#Studio#BowFour-11 (1).csv",
-            "Netherlands#Almelo#Ho Chi Minh-stad#BowNine-15_balanced (2).csv",
-            "Netherlands#Almelo#Ho Chi Minh-stad#BowNine-15_balanced (1).csv",
+            "Netherlands#Almelo#Dreesz#BowNine-15_balanced (2).csv",
+            "Netherlands#Almelo#Dreesz#BowNine-15_balanced (1).csv",
             "Netherlands#Almelo#Studio#BowNine-12_balanced (1).csv",
-            "Netherlands#Almelo#EG#BowOne-3 (1).csv",
-            "Netherlands#Almelo#deStreetzzz#BowFour-9 (1).csv"
+            "Netherlands#Almelo#EgbertGorter#BowOne-3 (1).csv",
+            "Netherlands#Enschede#CeeCee#BowFour-9 (1).csv"
         ]
         results = load_data(live_files, include_weekends)
     else:
